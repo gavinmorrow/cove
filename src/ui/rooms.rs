@@ -97,8 +97,9 @@ impl Rooms {
         })
     }
 
-    /// Remove rooms that are not running any more and can't be found in the db.
-    /// Insert rooms that are in the db but not yet in in the hash map.
+    /// Remove rooms that are not running any more and can't be found in the db
+    /// or config. Insert rooms that are in the db or config but not yet in in
+    /// the hash map.
     ///
     /// These kinds of rooms are either
     /// - failed connection attempts, or
@@ -110,6 +111,7 @@ impl Rooms {
             .rooms()
             .await
             .into_iter()
+            .chain(self.config.euph.rooms.keys().cloned())
             .collect::<HashSet<_>>();
 
         // Prevent room that is currently being shown from being removed. This
