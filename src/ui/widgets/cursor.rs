@@ -10,10 +10,7 @@ pub struct Cursor {
 
 impl Cursor {
     pub fn new<W: Into<BoxedWidget>>(inner: W) -> Self {
-        Self {
-            inner: inner.into(),
-            pos: Pos::ZERO,
-        }
+        Self { inner: inner.into(), pos: Pos::ZERO }
     }
 
     pub fn at(mut self, pos: Pos) -> Self {

@@ -247,10 +247,7 @@ impl<M: Msg, S: MsgStore<M>> InnerTreeViewState<M, S> {
             key!(Enter) => {
                 let content = self.editor.text();
                 if !content.trim().is_empty() {
-                    self.cursor = Cursor::Pseudo {
-                        coming_from,
-                        parent: parent.clone(),
-                    };
+                    self.cursor = Cursor::Pseudo { coming_from, parent: parent.clone() };
                     return Reaction::Composed { parent, content };
                 }
             }
@@ -316,10 +313,7 @@ impl<M: Msg, S: MsgStore<M>> InnerTreeViewState<M, S> {
                     Reaction::NotHandled
                 }
             }
-            Cursor::Editor {
-                coming_from,
-                parent,
-            } => self.handle_editor_input_event(
+            Cursor::Editor { coming_from, parent } => self.handle_editor_input_event(
                 terminal,
                 crossterm_lock,
                 event,
@@ -370,10 +364,7 @@ impl<M: Msg, S: MsgStore<M>> TreeViewState<M, S> {
     }
 
     pub fn widget(&self, nick: String) -> TreeView<M, S> {
-        TreeView {
-            inner: self.0.clone(),
-            nick,
-        }
+        TreeView { inner: self.0.clone(), nick }
     }
 
     pub async fn list_key_bindings(&self, bindings: &mut KeyBindingsList, can_compose: bool) {

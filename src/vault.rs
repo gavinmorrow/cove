@@ -41,10 +41,7 @@ impl Vault {
     }
 
     pub fn euph(&self, room: String) -> EuphVault {
-        EuphVault {
-            vault: self.clone(),
-            room,
-        }
+        EuphVault { vault: self.clone(), room }
     }
 }
 

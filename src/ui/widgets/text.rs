@@ -11,10 +11,7 @@ pub struct Text {
 
 impl Text {
     pub fn new<S: Into<Styled>>(styled: S) -> Self {
-        Self {
-            styled: styled.into(),
-            wrap: false,
-        }
+        Self { styled: styled.into(), wrap: false }
     }
 
     pub fn wrap(mut self, active: bool) -> Self {

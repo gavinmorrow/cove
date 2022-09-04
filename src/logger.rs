@@ -180,10 +180,7 @@ impl Log for Logger {
 impl Logger {
     pub fn init(level: Level) -> (Self, mpsc::UnboundedReceiver<()>) {
         let (event_tx, event_rx) = mpsc::unbounded_channel();
-        let logger = Self {
-            event_tx,
-            messages: Arc::new(Mutex::new(Vec::new())),
-        };
+        let logger = Self { event_tx, messages: Arc::new(Mutex::new(Vec::new())) };
 
         log::set_boxed_logger(Box::new(logger.clone())).expect("logger already set");
         log::set_max_level(level.to_level_filter());

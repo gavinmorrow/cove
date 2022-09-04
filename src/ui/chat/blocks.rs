@@ -26,13 +26,7 @@ impl<I> Block<I> {
         let widget = widget.into();
         let size = widget.size(frame, Some(frame.size().width), None);
         let height = size.height.into();
-        Self {
-            id,
-            top_line: 0,
-            height,
-            focus: 0..height,
-            widget,
-        }
+        Self { id, top_line: 0, height, focus: 0..height, widget }
     }
 
     pub fn focus(mut self, focus: Range<i32>) -> Self {
@@ -59,11 +53,7 @@ impl<I> Blocks<I> {
     /// Create a new [`Blocks`] such that the first prepended line will be on
     /// `line`.
     pub fn new_below(line: i32) -> Self {
-        Self {
-            blocks: VecDeque::new(),
-            top_line: line + 1,
-            bottom_line: line,
-        }
+        Self { blocks: VecDeque::new(), top_line: line + 1, bottom_line: line }
     }
 
     pub fn iter(&self) -> vec_deque::Iter<'_, Block<I>> {

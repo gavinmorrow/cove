@@ -33,11 +33,7 @@ pub struct LoggedOut {
 
 impl LoggedOut {
     fn new() -> Self {
-        Self {
-            focus: Focus::Email,
-            email: EditorState::new(),
-            password: EditorState::new(),
-        }
+        Self { focus: Focus::Email, email: EditorState::new(), password: EditorState::new() }
     }
 
     fn widget(&self) -> BoxedWidget {

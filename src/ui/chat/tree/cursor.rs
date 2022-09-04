@@ -10,22 +10,13 @@ use super::{Correction, InnerTreeViewState};
 pub enum Cursor<I> {
     Bottom,
     Msg(I),
-    Editor {
-        coming_from: Option<I>,
-        parent: Option<I>,
-    },
-    Pseudo {
-        coming_from: Option<I>,
-        parent: Option<I>,
-    },
+    Editor { coming_from: Option<I>, parent: Option<I> },
+    Pseudo { coming_from: Option<I>, parent: Option<I> },
 }
 
 impl<I> Cursor<I> {
     pub fn editor(coming_from: Option<I>, parent: Option<I>) -> Self {
-        Self::Editor {
-            coming_from,
-            parent,
-        }
+        Self::Editor { coming_from, parent }
     }
 }
 
@@ -39,14 +30,8 @@ impl<I: Eq> Cursor<I> {
     }
 
     pub fn refers_to_last_child_of(&self, id: &I) -> bool {
-        if let Self::Editor {
-            parent: Some(parent),
-            ..
-        }
-        | Self::Pseudo {
-            parent: Some(parent),
-            ..
-        } = self
+        if let Self::Editor { parent: Some(parent), .. }
+        | Self::Pseudo { parent: Some(parent), .. } = self
         {
             parent == id
         } else {
@@ -196,10 +181,7 @@ impl<M: Msg, S: MsgStore<M>> InnerTreeViewState<M, S> {
                 Self::find_prev_msg(&self.store, &self.folded, &mut tree, msg).await;
             }
             Cursor::Editor { .. } => {}
-            Cursor::Pseudo {
-                parent: Some(parent),
-                ..
-            } => {
+            Cursor::Pseudo { parent: Some(parent), .. } => {
                 let tree = self.store.tree(parent).await;
                 let mut id = parent.clone();
                 while Self::find_last_child(&self.folded, &tree, &mut id) {}
@@ -221,10 +203,7 @@ impl<M: Msg, S: MsgStore<M>> InnerTreeViewState<M, S> {
             Cursor::Pseudo { parent: None, .. } => {
                 self.cursor = Cursor::Bottom;
             }
-            Cursor::Pseudo {
-                parent: Some(parent),
-                ..
-            } => {
+            Cursor::Pseudo { parent: Some(parent), .. } => {
                 let mut tree = self.store.tree(parent).await;
                 let mut id = parent.clone();
                 while Self::find_last_child(&self.folded, &tree, &mut id) {}
@@ -253,10 +232,7 @@ impl<M: Msg, S: MsgStore<M>> InnerTreeViewState<M, S> {
                 Self::find_prev_sibling(&self.store, &mut tree, msg).await;
             }
             Cursor::Editor { .. } => {}
-            Cursor::Pseudo {
-                parent: Some(parent),
-                ..
-            } => {
+            Cursor::Pseudo { parent: Some(parent), .. } => {
                 let path = self.store.path(parent).await;
                 let tree = self.store.tree(path.first()).await;
                 if let Some(children) = tree.children(parent) {
@@ -290,10 +266,9 @@ impl<M: Msg, S: MsgStore<M>> InnerTreeViewState<M, S> {
 
     pub async fn move_cursor_to_parent(&mut self) {
         match &mut self.cursor {
-            Cursor::Pseudo {
-                parent: Some(parent),
-                ..
-            } => self.cursor = Cursor::Msg(parent.clone()),
+            Cursor::Pseudo { parent: Some(parent), .. } => {
+                self.cursor = Cursor::Msg(parent.clone())
+            }
             Cursor::Msg(id) => {
                 // Could also be done via retrieving the path, but it doesn't
                 // really matter here
@@ -307,10 +282,7 @@ impl<M: Msg, S: MsgStore<M>> InnerTreeViewState<M, S> {
 
     pub async fn move_cursor_to_root(&mut self) {
         match &mut self.cursor {
-            Cursor::Pseudo {
-                parent: Some(parent),
-                ..
-            } => {
+            Cursor::Pseudo { parent: Some(parent), .. } => {
                 let path = self.store.path(parent).await;
                 self.cursor = Cursor::Msg(path.first().clone());
             }

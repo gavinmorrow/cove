@@ -14,14 +14,7 @@ pub struct Padding {
 
 impl Padding {
     pub fn new<W: Into<BoxedWidget>>(inner: W) -> Self {
-        Self {
-            inner: inner.into(),
-            stretch: false,
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-        }
+        Self { inner: inner.into(), stretch: false, left: 0, right: 0, top: 0, bottom: 0 }
     }
 
     /// Whether the inner widget should be stretched to fill the additional

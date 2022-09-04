@@ -48,12 +48,7 @@ struct InnerEditorState {
 
 impl InnerEditorState {
     fn new(text: String) -> Self {
-        Self {
-            idx: text.len(),
-            col: 0,
-            last_width: u16::MAX,
-            text,
-        }
+        Self { idx: text.len(), col: 0, last_width: u16::MAX, text }
     }
 
     ///////////////////////////////
@@ -333,13 +328,7 @@ impl EditorState {
         let guard = self.0.lock();
         let text = Styled::new_plain(guard.text.clone());
         let idx = guard.idx;
-        Editor {
-            state: self.0.clone(),
-            text,
-            idx,
-            focus: true,
-            hidden: None,
-        }
+        Editor { state: self.0.clone(), text, idx, focus: true, hidden: None }
     }
 
     pub fn text(&self) -> String {

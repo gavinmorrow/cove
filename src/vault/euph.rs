@@ -93,10 +93,7 @@ impl EuphVault {
     }
 
     pub fn join(&self, time: Time) {
-        let request = EuphRequest::Join {
-            room: self.room.clone(),
-            time,
-        };
+        let request = EuphRequest::Join { room: self.room.clone(), time };
         let _ = self.vault.tx.send(request.into());
     }
 
@@ -126,22 +123,14 @@ impl EuphVault {
         next_msg: Option<Snowflake>,
         own_user_id: Option<UserId>,
     ) {
-        let request = EuphRequest::AddMsgs {
-            room: self.room.clone(),
-            msgs,
-            next_msg,
-            own_user_id,
-        };
+        let request = EuphRequest::AddMsgs { room: self.room.clone(), msgs, next_msg, own_user_id };
         let _ = self.vault.tx.send(request.into());
     }
 
     pub async fn last_span(&self) -> Option<(Option<Snowflake>, Option<Snowflake>)> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetLastSpan {
-            room: self.room.clone(),
-            result: tx,
-        };
+        let request = EuphRequest::GetLastSpan { room: self.room.clone(), result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -149,12 +138,8 @@ impl EuphVault {
     pub async fn chunk_at_offset(&self, amount: usize, offset: usize) -> Vec<Message> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetChunkAtOffset {
-            room: self.room.clone(),
-            amount,
-            offset,
-            result: tx,
-        };
+        let request =
+            EuphRequest::GetChunkAtOffset { room: self.room.clone(), amount, offset, result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -165,11 +150,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn path(&self, id: &Snowflake) -> Path<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetPath {
-            room: self.room.clone(),
-            id: *id,
-            result: tx,
-        };
+        let request = EuphRequest::GetPath { room: self.room.clone(), id: *id, result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -177,11 +158,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn msg(&self, id: &Snowflake) -> Option<SmallMessage> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetMsg {
-            room: self.room.clone(),
-            id: *id,
-            result: tx,
-        };
+        let request = EuphRequest::GetMsg { room: self.room.clone(), id: *id, result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -189,11 +166,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn tree(&self, tree_id: &Snowflake) -> Tree<SmallMessage> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetTree {
-            room: self.room.clone(),
-            root: *tree_id,
-            result: tx,
-        };
+        let request = EuphRequest::GetTree { room: self.room.clone(), root: *tree_id, result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -201,10 +174,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn first_tree_id(&self) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetFirstTreeId {
-            room: self.room.clone(),
-            result: tx,
-        };
+        let request = EuphRequest::GetFirstTreeId { room: self.room.clone(), result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -212,10 +182,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn last_tree_id(&self) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetLastTreeId {
-            room: self.room.clone(),
-            result: tx,
-        };
+        let request = EuphRequest::GetLastTreeId { room: self.room.clone(), result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -223,11 +190,8 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn prev_tree_id(&self, tree_id: &Snowflake) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetPrevTreeId {
-            room: self.room.clone(),
-            root: *tree_id,
-            result: tx,
-        };
+        let request =
+            EuphRequest::GetPrevTreeId { room: self.room.clone(), root: *tree_id, result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -235,11 +199,8 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn next_tree_id(&self, tree_id: &Snowflake) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetNextTreeId {
-            room: self.room.clone(),
-            root: *tree_id,
-            result: tx,
-        };
+        let request =
+            EuphRequest::GetNextTreeId { room: self.room.clone(), root: *tree_id, result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -247,10 +208,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn oldest_msg_id(&self) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetOldestMsgId {
-            room: self.room.clone(),
-            result: tx,
-        };
+        let request = EuphRequest::GetOldestMsgId { room: self.room.clone(), result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -258,10 +216,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn newest_msg_id(&self) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetNewestMsgId {
-            room: self.room.clone(),
-            result: tx,
-        };
+        let request = EuphRequest::GetNewestMsgId { room: self.room.clone(), result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -269,11 +224,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn older_msg_id(&self, id: &Snowflake) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetOlderMsgId {
-            room: self.room.clone(),
-            id: *id,
-            result: tx,
-        };
+        let request = EuphRequest::GetOlderMsgId { room: self.room.clone(), id: *id, result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -281,11 +232,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn newer_msg_id(&self, id: &Snowflake) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetNewerMsgId {
-            room: self.room.clone(),
-            id: *id,
-            result: tx,
-        };
+        let request = EuphRequest::GetNewerMsgId { room: self.room.clone(), id: *id, result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -293,10 +240,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn oldest_unseen_msg_id(&self) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetOldestUnseenMsgId {
-            room: self.room.clone(),
-            result: tx,
-        };
+        let request = EuphRequest::GetOldestUnseenMsgId { room: self.room.clone(), result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -304,10 +248,7 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn newest_unseen_msg_id(&self) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetNewestUnseenMsgId {
-            room: self.room.clone(),
-            result: tx,
-        };
+        let request = EuphRequest::GetNewestUnseenMsgId { room: self.room.clone(), result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -315,11 +256,8 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn older_unseen_msg_id(&self, id: &Snowflake) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetOlderUnseenMsgId {
-            room: self.room.clone(),
-            id: *id,
-            result: tx,
-        };
+        let request =
+            EuphRequest::GetOlderUnseenMsgId { room: self.room.clone(), id: *id, result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -327,11 +265,8 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn newer_unseen_msg_id(&self, id: &Snowflake) -> Option<Snowflake> {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetNewerUnseenMsgId {
-            room: self.room.clone(),
-            id: *id,
-            result: tx,
-        };
+        let request =
+            EuphRequest::GetNewerUnseenMsgId { room: self.room.clone(), id: *id, result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
@@ -339,29 +274,18 @@ impl MsgStore<SmallMessage> for EuphVault {
     async fn unseen_msgs_count(&self) -> usize {
         // TODO vault::Error
         let (tx, rx) = oneshot::channel();
-        let request = EuphRequest::GetUnseenMsgsCount {
-            room: self.room.clone(),
-            result: tx,
-        };
+        let request = EuphRequest::GetUnseenMsgsCount { room: self.room.clone(), result: tx };
         let _ = self.vault.tx.send(request.into());
         rx.await.unwrap()
     }
 
     async fn set_seen(&self, id: &Snowflake, seen: bool) {
-        let request = EuphRequest::SetSeen {
-            room: self.room.clone(),
-            id: *id,
-            seen,
-        };
+        let request = EuphRequest::SetSeen { room: self.room.clone(), id: *id, seen };
         let _ = self.vault.tx.send(request.into());
     }
 
     async fn set_older_seen(&self, id: &Snowflake, seen: bool) {
-        let request = EuphRequest::SetOlderSeen {
-            room: self.room.clone(),
-            id: *id,
-            seen,
-        };
+        let request = EuphRequest::SetOlderSeen { room: self.room.clone(), id: *id, seen };
         let _ = self.vault.tx.send(request.into());
     }
 }
@@ -509,18 +433,12 @@ impl EuphRequest {
             Self::GetRooms { result } => Self::get_rooms(conn, result),
             Self::Join { room, time } => Self::join(conn, room, time),
             Self::Delete { room } => Self::delete(conn, room),
-            Self::AddMsg {
-                room,
-                msg,
-                prev_msg,
-                own_user_id,
-            } => Self::add_msg(conn, room, *msg, prev_msg, own_user_id),
-            Self::AddMsgs {
-                room,
-                msgs,
-                next_msg,
-                own_user_id,
-            } => Self::add_msgs(conn, room, msgs, next_msg, own_user_id),
+            Self::AddMsg { room, msg, prev_msg, own_user_id } => {
+                Self::add_msg(conn, room, *msg, prev_msg, own_user_id)
+            }
+            Self::AddMsgs { room, msgs, next_msg, own_user_id } => {
+                Self::add_msgs(conn, room, msgs, next_msg, own_user_id)
+            }
             Self::GetLastSpan { room, result } => Self::get_last_span(conn, room, result),
             Self::GetPath { room, id, result } => Self::get_path(conn, room, id, result),
             Self::GetMsg { room, id, result } => Self::get_msg(conn, room, id, result),
@@ -558,12 +476,9 @@ impl EuphRequest {
             }
             Self::SetSeen { room, id, seen } => Self::set_seen(conn, room, id, seen),
             Self::SetOlderSeen { room, id, seen } => Self::set_older_seen(conn, room, id, seen),
-            Self::GetChunkAtOffset {
-                room,
-                amount,
-                offset,
-                result,
-            } => Self::get_chunk_at_offset(conn, room, amount, offset, result),
+            Self::GetChunkAtOffset { room, amount, offset, result } => {
+                Self::get_chunk_at_offset(conn, room, amount, offset, result)
+            }
         };
         if let Err(e) = result {
             // If an error occurs here, the rest of the UI will likely panic and

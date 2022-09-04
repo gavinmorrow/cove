@@ -101,10 +101,7 @@ impl EuphRoom {
     ) {
         loop {
             let event = some_or_return!(euph_room_event_rx.recv().await);
-            let event = UiEvent::EuphRoom {
-                name: name.clone(),
-                event,
-            };
+            let event = UiEvent::EuphRoom { name: name.clone(), event };
             ok_or_return!(ui_event_tx.send(event));
         }
     }
@@ -182,10 +179,7 @@ impl EuphRoom {
             State::Auth(_)
                 if !matches!(
                     status,
-                    RoomStatus::Connected(Status::Joining(Joining {
-                        bounce: Some(_),
-                        ..
-                    }))
+                    RoomStatus::Connected(Status::Joining(Joining { bounce: Some(_), .. }))
                 ) =>
             {
                 self.state = State::Normal
@@ -301,9 +295,7 @@ impl EuphRoom {
 
         let can_compose = if let Some(room) = &self.room {
             match room.status().await.ok().flatten() {
-                Some(Status::Joining(Joining {
-                    bounce: Some(_), ..
-                })) => {
+                Some(Status::Joining(Joining { bounce: Some(_), .. })) => {
                     bindings.binding("a", "authenticate");
                     false
                 }
@@ -363,9 +355,9 @@ impl EuphRoom {
             }
 
             match status.ok().flatten() {
-                Some(Status::Joining(Joining {
-                    bounce: Some(_), ..
-                })) if matches!(event, key!('a')) => {
+                Some(Status::Joining(Joining { bounce: Some(_), .. }))
+                    if matches!(event, key!('a')) =>
+                {
                     self.state = State::Auth(auth::new());
                     true
                 }
@@ -534,10 +526,8 @@ impl EuphRoom {
         if let Some((action, reason)) = error {
             let description = format!("Failed to {action}.");
             let reason = reason.unwrap_or_else(|| "no idea, the server wouldn't say".to_string());
-            self.popups.push_front(RoomPopup::Error {
-                description,
-                reason,
-            });
+            self.popups
+                .push_front(RoomPopup::Error { description, reason });
         }
 
         handled
@@ -567,10 +557,8 @@ impl EuphRoom {
             _ => return false,
         };
         let description = format!("Failed to {action}.");
-        self.popups.push_front(RoomPopup::Error {
-            description,
-            reason,
-        });
+        self.popups
+            .push_front(RoomPopup::Error { description, reason });
         true
     }
 }

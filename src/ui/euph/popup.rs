@@ -26,10 +26,7 @@ impl RoomPopup {
 
     pub fn widget(&self) -> BoxedWidget {
         let widget = match self {
-            Self::Error {
-                description,
-                reason,
-            } => Self::server_error_widget(description, reason),
+            Self::Error { description, reason } => Self::server_error_widget(description, reason),
         };
 
         Float::new(widget).horizontal(0.5).vertical(0.5).into()

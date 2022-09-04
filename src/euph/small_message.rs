@@ -126,11 +126,7 @@ fn styled_content_me(content: &str) -> Styled {
 }
 
 fn styled_editor_content(content: &str) -> Styled {
-    let style = if as_me(content).is_some() {
-        style_me()
-    } else {
-        ContentStyle::default()
-    };
+    let style = if as_me(content).is_some() { style_me() } else { ContentStyle::default() };
     highlight_content(content, style)
 }
 

@@ -32,10 +32,7 @@ impl LinksState {
             .map(|l| l.as_str().to_string())
             .collect();
 
-        Self {
-            links,
-            list: ListState::new(),
-        }
+        Self { links, list: ListState::new() }
     }
 
     pub fn widget(&self) -> BoxedWidget {
@@ -77,10 +74,7 @@ impl LinksState {
     fn open_link_by_id(&self, id: usize) -> EventResult {
         if let Some(link) = self.links.get(id) {
             if let Err(error) = open::that(link) {
-                return EventResult::ErrorOpeningLink {
-                    link: link.to_string(),
-                    error,
-                };
+                return EventResult::ErrorOpeningLink { link: link.to_string(), error };
             }
         }
         EventResult::Handled

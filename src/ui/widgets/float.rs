@@ -11,11 +11,7 @@ pub struct Float {
 
 impl Float {
     pub fn new<W: Into<BoxedWidget>>(inner: W) -> Self {
-        Self {
-            inner: inner.into(),
-            horizontal: None,
-            vertical: None,
-        }
+        Self { inner: inner.into(), horizontal: None, vertical: None }
     }
 
     pub fn horizontal(mut self, position: f32) -> Self {

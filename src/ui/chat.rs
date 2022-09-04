@@ -52,11 +52,7 @@ pub struct ChatState<M: Msg, S: MsgStore<M>> {
 
 impl<M: Msg, S: MsgStore<M> + Clone> ChatState<M, S> {
     pub fn new(store: S) -> Self {
-        Self {
-            mode: Mode::Tree,
-            tree: TreeViewState::new(store.clone()),
-            store,
-        }
+        Self { mode: Mode::Tree, tree: TreeViewState::new(store.clone()), store }
     }
 }
 
@@ -75,10 +71,7 @@ impl<M: Msg, S: MsgStore<M>> ChatState<M, S> {
 pub enum Reaction<M: Msg> {
     NotHandled,
     Handled,
-    Composed {
-        parent: Option<M::Id>,
-        content: String,
-    },
+    Composed { parent: Option<M::Id>, content: String },
 }
 
 impl<M: Msg> Reaction<M> {

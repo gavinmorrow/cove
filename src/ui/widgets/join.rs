@@ -11,11 +11,7 @@ pub struct Segment {
 
 impl Segment {
     pub fn new<W: Into<BoxedWidget>>(widget: W) -> Self {
-        Self {
-            widget: widget.into(),
-            expanding: false,
-            priority: None,
-        }
+        Self { widget: widget.into(), expanding: false, priority: None }
     }
 
     /// Expand this segment into the remaining space after all segment minimum
@@ -45,12 +41,7 @@ struct SizedSegment {
 
 impl SizedSegment {
     pub fn new(idx: usize, segment: &Segment) -> Self {
-        Self {
-            idx,
-            size: Size::ZERO,
-            expanding: segment.expanding,
-            priority: segment.priority,
-        }
+        Self { idx, size: Size::ZERO, expanding: segment.expanding, priority: segment.priority }
     }
 }
 

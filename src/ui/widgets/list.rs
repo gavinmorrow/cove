@@ -43,12 +43,7 @@ struct InnerListState<Id> {
 
 impl<Id> InnerListState<Id> {
     fn new() -> Self {
-        Self {
-            rows: vec![],
-            offset: 0,
-            cursor: None,
-            make_cursor_visible: false,
-        }
+        Self { rows: vec![], offset: 0, cursor: None, make_cursor_visible: false }
     }
 }
 
@@ -245,14 +240,8 @@ impl<Id: Clone> ListState<Id> {
 ////////////
 
 enum Row<Id> {
-    Unselectable {
-        normal: BoxedWidget,
-    },
-    Selectable {
-        id: Id,
-        normal: BoxedWidget,
-        selected: BoxedWidget,
-    },
+    Unselectable { normal: BoxedWidget },
+    Selectable { id: Id, normal: BoxedWidget, selected: BoxedWidget },
 }
 
 impl<Id> Row<Id> {
@@ -266,9 +255,7 @@ impl<Id> Row<Id> {
     fn size(&self, frame: &mut Frame, max_width: Option<u16>, max_height: Option<u16>) -> Size {
         match self {
             Self::Unselectable { normal } => normal.size(frame, max_width, max_height),
-            Self::Selectable {
-                normal, selected, ..
-            } => {
+            Self::Selectable { normal, selected, .. } => {
                 let normal_size = normal.size(frame, max_width, max_height);
                 let selected_size = selected.size(frame, max_width, max_height);
                 Size::new(
@@ -288,11 +275,7 @@ pub struct List<Id> {
 
 impl<Id> List<Id> {
     fn new(state: Arc<Mutex<InnerListState<Id>>>) -> Self {
-        Self {
-            state,
-            rows: vec![],
-            focus: false,
-        }
+        Self { state, rows: vec![], focus: false }
     }
 
     pub fn focus(mut self, focus: bool) -> Self {
@@ -305,9 +288,7 @@ impl<Id> List<Id> {
     }
 
     pub fn add_unsel<W: Into<BoxedWidget>>(&mut self, normal: W) {
-        self.rows.push(Row::Unselectable {
-            normal: normal.into(),
-        });
+        self.rows.push(Row::Unselectable { normal: normal.into() });
     }
 
     pub fn add_sel<W1, W2>(&mut self, id: Id, normal: W1, selected: W2)
@@ -315,11 +296,8 @@ impl<Id> List<Id> {
         W1: Into<BoxedWidget>,
         W2: Into<BoxedWidget>,
     {
-        self.rows.push(Row::Selectable {
-            id,
-            normal: normal.into(),
-            selected: selected.into(),
-        });
+        self.rows
+            .push(Row::Selectable { id, normal: normal.into(), selected: selected.into() });
     }
 }
 
@@ -362,17 +340,9 @@ impl<Id: Clone + Eq + Send> Widget for List<Id> {
             frame.push(Pos::new(0, dy), row_size);
             match row {
                 Row::Unselectable { normal } => normal.render(frame).await,
-                Row::Selectable {
-                    id,
-                    normal,
-                    selected,
-                } => {
+                Row::Selectable { id, normal, selected } => {
                     let focusing = self.focus
-                        && if let Some(cursor) = &cursor {
-                            cursor.id == id
-                        } else {
-                            false
-                        };
+                        && if let Some(cursor) = &cursor { cursor.id == id } else { false };
                     let widget = if focusing { selected } else { normal };
                     widget.render(frame).await;
                 }

@@ -67,11 +67,7 @@ impl<M: Msg> Tree<M> {
             list.sort_unstable();
         }
 
-        Self {
-            root,
-            msgs,
-            children,
-        }
+        Self { root, msgs, children }
     }
 
     pub fn len(&self) -> usize {

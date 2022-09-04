@@ -23,14 +23,8 @@ impl<M: Msg + ChatMsg, S: MsgStore<M>> InnerTreeViewState<M, S> {
             Cursor::Bottom
             | Cursor::Editor { parent: None, .. }
             | Cursor::Pseudo { parent: None, .. } => Path::new(vec![M::last_possible_id()]),
-            Cursor::Editor {
-                parent: Some(parent),
-                ..
-            }
-            | Cursor::Pseudo {
-                parent: Some(parent),
-                ..
-            } => {
+            Cursor::Editor { parent: Some(parent), .. }
+            | Cursor::Pseudo { parent: Some(parent), .. } => {
                 let mut path = self.store.path(parent).await;
                 path.push(M::last_possible_id());
                 path
@@ -92,11 +86,8 @@ impl<M: Msg + ChatMsg, S: MsgStore<M>> InnerTreeViewState<M, S> {
 
         // Last part of message body if message is folded
         let folded = self.folded.contains(id);
-        let folded_info = if folded {
-            Some(tree.subtree_size(id)).filter(|s| *s > 0)
-        } else {
-            None
-        };
+        let folded_info =
+            if folded { Some(tree.subtree_size(id)).filter(|s| *s > 0) } else { None };
 
         // Main message body
         let highlighted = self.cursor.refers_to(id);
@@ -266,12 +257,8 @@ impl<M: Msg + ChatMsg, S: MsgStore<M>> InnerTreeViewState<M, S> {
                 blocks
             }
             Cursor::Msg(_)
-            | Cursor::Editor {
-                parent: Some(_), ..
-            }
-            | Cursor::Pseudo {
-                parent: Some(_), ..
-            } => {
+            | Cursor::Editor { parent: Some(_), .. }
+            | Cursor::Pseudo { parent: Some(_), .. } => {
                 let root = last_cursor_path.first();
                 let tree = self.store.tree(root).await;
                 let mut blocks = self.layout_tree(nick, frame, tree);
@@ -305,12 +292,8 @@ impl<M: Msg + ChatMsg, S: MsgStore<M>> InnerTreeViewState<M, S> {
                 blocks
             }
             Cursor::Msg(_)
-            | Cursor::Editor {
-                parent: Some(_), ..
-            }
-            | Cursor::Pseudo {
-                parent: Some(_), ..
-            } => {
+            | Cursor::Editor { parent: Some(_), .. }
+            | Cursor::Pseudo { parent: Some(_), .. } => {
                 let root = cursor_path.first();
                 let tree = self.store.tree(root).await;
                 let mut blocks = self.layout_tree(nick, frame, tree);

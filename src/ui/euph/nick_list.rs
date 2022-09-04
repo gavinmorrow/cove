@@ -101,11 +101,7 @@ fn render_row(list: &mut List<String>, session: &SessionView, own_session: &Sess
         ""
     };
 
-    let owner = if session.session_id == own_session.session_id {
-        ">"
-    } else {
-        " "
-    };
+    let owner = if session.session_id == own_session.session_id { ">" } else { " " };
 
     let normal = Styled::new_plain(owner).then(name, style).then_plain(perms);
     let selected = Styled::new_plain(owner)

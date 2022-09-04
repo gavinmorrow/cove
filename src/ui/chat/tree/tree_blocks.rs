@@ -32,11 +32,7 @@ pub struct TreeBlocks<I> {
 
 impl<I> TreeBlocks<I> {
     pub fn new(top_root: Root<I>, bottom_root: Root<I>) -> Self {
-        Self {
-            blocks: Blocks::new(),
-            top_root,
-            bottom_root,
-        }
+        Self { blocks: Blocks::new(), top_root, bottom_root }
     }
 
     pub fn blocks(&self) -> &Blocks<BlockId<I>> {

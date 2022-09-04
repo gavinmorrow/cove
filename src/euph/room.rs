@@ -345,11 +345,8 @@ impl State {
     }
 
     async fn on_status(&self, reply_tx: oneshot::Sender<Option<Status>>) {
-        let status = if let Some(conn_tx) = &self.conn_tx {
-            conn_tx.status().await.ok()
-        } else {
-            None
-        };
+        let status =
+            if let Some(conn_tx) = &self.conn_tx { conn_tx.status().await.ok() } else { None };
 
         let _ = reply_tx.send(status);
     }
@@ -397,10 +394,7 @@ impl State {
             let conn_tx = conn_tx.clone();
             task::spawn(async move {
                 let _ = conn_tx
-                    .send(Auth {
-                        r#type: AuthOption::Passcode,
-                        passcode: Some(password),
-                    })
+                    .send(Auth { r#type: AuthOption::Passcode, passcode: Some(password) })
                     .await;
             });
         }
@@ -433,11 +427,7 @@ impl State {
 
     fn on_login(&self, email: String, password: String) {
         if let Some(conn_tx) = &self.conn_tx {
-            let _ = conn_tx.send(Login {
-                namespace: "email".to_string(),
-                id: email,
-                password,
-            });
+            let _ = conn_tx.send(Login { namespace: "email".to_string(), id: email, password });
         }
     }
 
@@ -486,10 +476,7 @@ impl Room {
             ephemeral,
         ));
 
-        let new_room = Self {
-            canary: canary_tx,
-            event_tx,
-        };
+        let new_room = Self { canary: canary_tx, event_tx };
         (new_room, euph_room_event_rx)
     }
 
