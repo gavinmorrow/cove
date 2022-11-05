@@ -3,6 +3,7 @@ mod migrate;
 mod prepare;
 
 use std::path::Path;
+use std::time::{Duration, Instant};
 use std::{fs, thread};
 
 use log::error;
@@ -67,8 +68,44 @@ fn run(mut conn: Connection, mut rx: mpsc::UnboundedReceiver<Request>) {
                 drop(tx);
             }
             Request::Euph(r) => {
+                let name = match &r {
+                    EuphRequest::GetCookies(_) => "GetCookies",
+                    EuphRequest::SetCookies(_) => "SetCookies",
+                    EuphRequest::GetRooms(_) => "GetRooms",
+                    EuphRequest::Join(_) => "Join",
+                    EuphRequest::Delete(_) => "Delete",
+                    EuphRequest::AddMsg(_) => "AddMsg",
+                    EuphRequest::AddMsgs(_) => "AddMsgs",
+                    EuphRequest::GetLastSpan(_) => "GetLastSpan",
+                    EuphRequest::GetPath(_) => "GetPath",
+                    EuphRequest::GetMsg(_) => "GetMsg",
+                    EuphRequest::GetFullMsg(_) => "GetFullMsg",
+                    EuphRequest::GetTree(_) => "GetTree",
+                    EuphRequest::GetFirstRootId(_) => "GetFirstRootId",
+                    EuphRequest::GetLastRootId(_) => "GetLastRootId",
+                    EuphRequest::GetPrevRootId(_) => "GetPrevRootId",
+                    EuphRequest::GetNextRootId(_) => "GetNextRootId",
+                    EuphRequest::GetOldestMsgId(_) => "GetOldestMsgId",
+                    EuphRequest::GetNewestMsgId(_) => "GetNewestMsgId",
+                    EuphRequest::GetOlderMsgId(_) => "GetOlderMsgId",
+                    EuphRequest::GetNewerMsgId(_) => "GetNewerMsgId",
+                    EuphRequest::GetOldestUnseenMsgId(_) => "GetOldestUnseenMsgId",
+                    EuphRequest::GetNewestUnseenMsgId(_) => "GetNewestUnseenMsgId",
+                    EuphRequest::GetOlderUnseenMsgId(_) => "GetOlderUnseenMsgId",
+                    EuphRequest::GetNewerUnseenMsgId(_) => "GetNewerUnseenMsgId",
+                    EuphRequest::GetUnseenMsgsCount(_) => "GetUnseenMsgsCount",
+                    EuphRequest::SetSeen(_) => "SetSeen",
+                    EuphRequest::SetOlderSeen(_) => "SetOlderSeen",
+                    EuphRequest::GetChunkAtOffset(_) => "GetChunkAtOffset",
+                };
+                let start = Instant::now();
                 if let Err(e) = r.perform(&mut conn) {
                     error!("{e}");
+                }
+                let end = Instant::now();
+                let delta = end - start;
+                if delta > Duration::from_millis(1) {
+                    eprintln!("vault.euph: {name} took {delta:?}");
                 }
             }
         }
