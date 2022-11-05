@@ -105,7 +105,7 @@ fn run(mut conn: Connection, mut rx: mpsc::UnboundedReceiver<Request>) {
                 let end = Instant::now();
                 let delta = end - start;
                 if delta > Duration::from_millis(10) {
-                    error!("vault.euph: {name} took {delta:?}");
+                    error!("{name} took {delta:?}");
                 }
             }
         }
