@@ -240,6 +240,11 @@ impl Room {
                 );
             }
             Data::SendEvent(SendEvent(msg)) | Data::SendReply(SendReply(msg)) => {
+                match super::send_notification(msg) {
+                    Ok(_) => {}
+                    Err(e) => error!("Failed to send notification: {}", e),
+                }
+                
                 let own_user_id = self.own_user_id();
                 if let Some(last_msg_id) = &mut self.last_msg_id {
                     logging_unwrap!(
