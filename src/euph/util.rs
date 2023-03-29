@@ -1,5 +1,6 @@
 use crossterm::style::{Color, ContentStyle, Stylize};
-use euphoxide::Emoji;
+use euphoxide::{api::Message, Emoji};
+use notify_rust::Notification;
 use once_cell::sync::Lazy;
 use toss::styled::Styled;
 
@@ -53,4 +54,13 @@ pub fn style_nick(nick: &str, base: ContentStyle) -> Styled {
 
 pub fn style_nick_exact(nick: &str, base: ContentStyle) -> Styled {
     Styled::new(nick, nick_style(nick, base))
+}
+
+pub fn send_notification(msg: &Message) -> Result<notify_rust::NotificationHandle, notify_rust::error::Error> {
+    let nick = &msg.sender.name;
+    let content = &msg.content;
+    Notification::new()
+        .summary(&nick)
+        .body(&content)
+        .show()
 }
